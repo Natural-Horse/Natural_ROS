@@ -46,7 +46,7 @@ float cal_dis(float x1, float y1, float x2, float y2)
 // 五角星顶点坐标计算函数
 void calculate_star_points(float radius, float z, vector<pair<float, float>> &points)
 {
-    float angle_step = M_PI / 5; // 每个顶点间隔角度 (36°)
+    float angle_step = M_PI / 5; // 每个顶点间隔角度36°
     for (int i = 0; i < 10; i++)
     {
         float r = (i % 2 == 0) ? radius : radius / 2.6; // 外顶点和内顶点的半径比例
@@ -125,20 +125,19 @@ int main(int argc, char **argv)
     // 按顺序飞向五角星的每个顶点
     for (int point_idx = 0; point_idx < square_points.size(); ++point_idx)
     {
-        i = 0;
         do
         {
             ros::spinOnce();
             Command_now.command = Move_ENU;
             Command_now.sub_mode = 0;
-            Command_now.pos_sp[0] = square_points[point_idx].first;
-            Command_now.pos_sp[1] = square_points[point_idx].second;
+            Command_now.pos_sp[0] = star_points[point_idx].first;
+            Command_now.pos_sp[1] = star_points[point_idx].second;
             Command_now.pos_sp[2] = height_square;
             Command_now.yaw_sp = 0;
             Command_now.comid = comid++;
             move_pub.publish(Command_now);
             rate.sleep();
-            cout << "Moving to Point " << point_idx + 1 << ": (" << square_points[point_idx].first << ", " << square_points[point_idx].second << ", " << height_square << ")" << endl;
+            cout << "Moving to Point " << point_idx + 1 << ": (" << star_points[point_idx].first << ", " << star_points[point_idx].second << ", " << height_square << ")" << endl;
             cal_dis(pos_drone.pose.position.x, pos_drone.pose.position.y, Command_now.pos_sp[0], Command_now.pos_sp[1]);
             i++;
         } while(absdis > 0.3);
